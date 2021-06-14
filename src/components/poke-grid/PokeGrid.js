@@ -1,8 +1,24 @@
 import React, { useState, useCallback, useEffect, useRef } from 'react';
+
+import styled from 'styled-components';
+
 import PokeCard from './PokeCard';
 import getPaginatedPokemonList from '../../api/Pokedex';
-import './PokeGrid.css';
 import Spinner from '../common/Spinner';
+
+const StyledPokeGrid = styled.div`
+  height: 100%;
+  display: grid;
+  grid-gap: 12px;
+  grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+`;
+
+const StyledPokeGridLoaderWrap = styled.div`
+  height: 200px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+`;
 
 const LIMIT = 40;
 
@@ -28,46 +44,51 @@ const PokeGrid = () => {
 
   const prevYRef = useRef(0);
 
-  const intersectionObserverCallback = entries => {
-    const [observedElement] = entries;
-    const { y } = observedElement.boundingClientRect;
-    if (prevYRef.current > y) {
-      fetchMorePokemon();
-    }
-    prevYRef.current = y;
-  };
-
-  const observer = useRef(
-    new IntersectionObserver(intersectionObserverCallback, { threshold: 0.1 })
+  const OBSERVER = useRef(
+    new IntersectionObserver(
+      entries => {
+        const [observedElement] = entries;
+        const { y } = observedElement.boundingClientRect;
+        if (prevYRef.current > y) {
+          fetchMorePokemon();
+        }
+        prevYRef.current = y;
+      },
+      { threshold: 0.1 }
+    )
   );
 
-  const observedElementRef = useRef(null);
+  const OBSERVED_ELEMENT_REF = useRef(null);
 
   useEffect(() => {
-    const currentObserver = observer.current;
-    const currentObservedElementRef =
-      observedElementRef && observedElementRef.current;
+    const CURRENT_OBSERVER = OBSERVER && OBSERVER.current;
 
-    if (currentObservedElementRef) {
-      currentObserver.observe(currentObservedElementRef);
+    const CURRENT_OBSERVED_ELEMENT_REF =
+      OBSERVED_ELEMENT_REF && OBSERVED_ELEMENT_REF.current;
+
+    if (CURRENT_OBSERVED_ELEMENT_REF) {
+      CURRENT_OBSERVER.observe(CURRENT_OBSERVED_ELEMENT_REF);
     }
 
     return () => {
-      if (currentObservedElementRef) {
-        currentObserver.unobserve(currentObservedElementRef);
+      if (CURRENT_OBSERVED_ELEMENT_REF) {
+        CURRENT_OBSERVER.unobserve(CURRENT_OBSERVED_ELEMENT_REF);
       }
     };
   }, []);
 
   return (
-    <div className="pokedex-grid">
+    <StyledPokeGrid>
       {pokemonList.map(pokemon => (
         <PokeCard key={pokemon.name} {...pokemon} />
       ))}
-      <div ref={observedElementRef} className="pokedex-grid-loader">
+      <StyledPokeGridLoaderWrap
+        ref={OBSERVED_ELEMENT_REF}
+        className="pokedex-grid-loader"
+      >
         {fetching && <Spinner />}
-      </div>
-    </div>
+      </StyledPokeGridLoaderWrap>
+    </StyledPokeGrid>
   );
 };
 

@@ -1,27 +1,67 @@
 import React from 'react';
-import './PokeCard.css';
-import { useHistory } from 'react-router-dom';
+import { Link } from 'react-router-dom';
+import styled from 'styled-components';
+
+const StyledPokeCard = styled(Link)`
+  padding-top: 24px;
+  border-radius: 2px;
+  box-shadow: 0 0 5px rgba(3, 27, 78, 0.1);
+  transition: box-shadow 0.4s ease-in-out;
+
+  &:hover {
+    box-shadow: 0 2px 20px rgba(3, 27, 78, 0.4);
+    cursor: pointer;
+  }
+
+  figure {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  dl {
+    height: 60px;
+    margin: 0;
+    padding: 6px 24px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  dt {
+    height: 20px;
+    padding: 0 6px;
+    border-radius: 10px;
+    background-color: #90caf9;
+    font-family: 'Open Sans Condensed', sans-serif;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  dd {
+    margin: 0;
+    font-size: 18px;
+    font-family: 'Open Sans Condensed', sans-serif;
+    text-transform: uppercase;
+  }
+`;
 
 const PokeCard = ({ id, name }) => {
-  const history = useHistory();
-  const routeToPokemonDetails = () => {
-    history.push(`/pokemon/${id}`);
-  };
-
   return (
-    <div className="pokemon-card" onClick={routeToPokemonDetails}>
-      <div className="pokemon-card-image">
+    <StyledPokeCard to={`/pokemon/${id}`}>
+      <figure className="pokemon-card-image">
         <img
           alt={`Pokémon: ${name}`}
           height="180px"
           src={`https://pokeres.bastionbot.org/images/pokemon/${id}.png`}
         />
-      </div>
-      <div className="pokemon-card-info">
-        <span className="pokemon-card-id">#{id}</span>
-        <span className="pokemon-card-name">{name}</span>
-      </div>
-    </div>
+      </figure>
+      <dl>
+        <dt>#{id}</dt>
+        <dd>{name}</dd>
+      </dl>
+    </StyledPokeCard>
   );
 };
 

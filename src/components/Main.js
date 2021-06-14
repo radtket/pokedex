@@ -1,30 +1,47 @@
 import React from 'react';
-import './Main.css';
-import { Switch, Route, useHistory } from 'react-router-dom';
+import styled from 'styled-components';
+import { Switch, Route, Link } from 'react-router-dom';
 import PokeGrid from './poke-grid/PokeGrid';
 
-const Main = () => {
-  const history = useHistory();
+const StyledMainWrapper = styled.div`
+  height: 100vh;
+  overflow: hidden;
+`;
 
+const StyledMain = styled.main`
+  height: calc(100% - 60px);
+  padding: 24px;
+  overflow: auto;
+`;
+
+const StyledHeader = styled.header`
+  align-items: center;
+  background-color: #e3350d;
+  color: #fff;
+  display: flex;
+  font-size: larger;
+  font-weight: bold;
+  height: 60px;
+  padding-left: 60px;
+
+  a {
+    cursor: pointer;
+  }
+`;
+
+const Main = () => {
   return (
-    <div className="pokedex">
-      <div className="pokedex-header">
-        <span
-          className="pokedex-header-title"
-          onClick={() => {
-            history.push('/');
-          }}
-        >
-          Pokémon
-        </span>
-      </div>
-      <div className="pokedex-content">
+    <StyledMainWrapper>
+      <StyledHeader>
+        <Link to="/">Pokémon</Link>
+      </StyledHeader>
+      <StyledMain>
         <Switch>
           <Route path="/pokemon/:id" />
           <Route component={PokeGrid} path="/" />
         </Switch>
-      </div>
-    </div>
+      </StyledMain>
+    </StyledMainWrapper>
   );
 };
 
