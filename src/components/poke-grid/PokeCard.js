@@ -54,7 +54,8 @@ const PokeCard = ({ id, name }) => {
         <img
           alt={`Pokémon: ${name}`}
           height="180px"
-          src={`https://pokeres.bastionbot.org/images/pokemon/${id}.png`}
+          // src={`https://pokeres.bastionbot.org/images/pokemon/${id}.png`}
+          src={`https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/${id}.png`}
         />
       </figure>
       <dl>
